@@ -11,6 +11,7 @@ class Login extends Component {
         }
         this._onSubmit= this._onSubmit.bind(this)
         this.handlerChangeElement= this.handlerChangeElement.bind(this)
+        this.renderError= this.renderError.bind(this)
     }
     
     _onSubmit(event){
@@ -19,7 +20,7 @@ class Login extends Component {
         fetch('http://private-828b1-raaf.apiary-mock.com/users/sign_in',{method:'post', data: {email,password}})
         .then((response) => { 
             if(response.status === 401)    {
-                throw new Error("Authentication Errror")
+                throw ("Authentication Errror")
             }else{
                 this.setState({
                     errorMessage: null
@@ -48,6 +49,7 @@ class Login extends Component {
                 <input type="email" name="email" placeholder="Email" onChange={this.handlerChangeElement} value={this.state.email} required/>
                 <input type="password" name="password" placeholder="Password" value={this.state.password} onChange={this.handlerChangeElement} required/>
                 {this.renderSubmitBtn()}
+                {this.renderError()}
             </form>
             </div>
          )
@@ -65,6 +67,11 @@ class Login extends Component {
         )
     }
 
+    renderError(){
+        if(this.state.errorMessage){
+            return <div style={{backgroundColor:'red', color: "#FAC"}} >{this.state.errorMessage}</div>
+        }
+    }
     handlerChangeElement(event){
         this.setState({
             [event.target.name]: event.target.value
