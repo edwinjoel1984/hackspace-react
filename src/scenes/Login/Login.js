@@ -6,7 +6,8 @@ class Login extends Component {
         super(props)
         this.state = {
             email:'test2@test.com',
-            password:'testtest'
+            password:'testtest',
+            errorMessage: null
         }
         this._onSubmit= this._onSubmit.bind(this)
         this.handlerChangeElement= this.handlerChangeElement.bind(this)
@@ -16,15 +17,29 @@ class Login extends Component {
         event.preventDefault();
         const {email,password} = this.state;
         fetch('http://private-828b1-raaf.apiary-mock.com/users/sign_in',{method:'post', data: {email,password}})
-        .then((response) => { return response.json() })
+        .then((response) => { 
+            if(response.status === 401)    {
+                throw new Error("Authentication Errror")
+            }else{
+                this.setState({
+                    errorMessage: null
+                })
+                return response.json()
+            }
+         })
         .then((json)=>{
+            alert("Sign in succesfully")
             console.log('response',json)
         }).catch((error)=>{
-
+            this._handleError(error);
+            this.setState({
+                errorMessage: error
+            })
         })
-
     }
-
+    _handleError(error){
+        console.log(error)
+    }
     render() { 
         
         return ( 
