@@ -1,0 +1,36 @@
+
+div.logo{
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 30px;
+}
+form {
+    display: flex;
+    width: 300px;
+    margin: 100px auto; 
+    position: relative;
+    flex-direction: column;
+}
+input{
+    height: 40px;
+    padding: 3px;
+    font-size: 16px;
+    margin-bottom: 5px;
+    display: flex;
+    border-radius: 5px;
+    border: 1px solid #4c4c4c;
+}
+.btnLogin{
+    margin-top: 20px;
+    height: 50px;
+    width: 200px;
+    margin: auto;
+    /* display: flex; */
+    font-size: 14px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.btnLogin:hover{
+    background-color: powderblue;
+}

@@ -1,4 +1,6 @@
 import React,{Component} from 'react'
+import './Login.css';
+import Logo from '../../assets/images/logo.png';
 
 class Login extends Component {
     state = {}
@@ -45,7 +47,11 @@ class Login extends Component {
         
         return ( 
             <div>
+                
             <form onSubmit={this._onSubmit} method="post" >
+            <div className="logo">
+                <img src={Logo} alt="ALt"/>
+                </div> 
                 <input type="email" name="email" placeholder="Email" onChange={this.handlerChangeElement} value={this.state.email} required/>
                 <input type="password" name="password" placeholder="Password" value={this.state.password} onChange={this.handlerChangeElement} required/>
                 {this.renderSubmitBtn()}
@@ -56,12 +62,8 @@ class Login extends Component {
     }
 
     renderSubmitBtn = () =>{
-        const buttonStyle={
-            backgroundColor: 'red',
-            color: 'white'
-        }
         return (
-            <button type="submint" style={buttonStyle}>
+            <button type="submit" className="btnLogin">
                     Login
             </button>
         )
