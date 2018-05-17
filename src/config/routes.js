@@ -1,17 +1,24 @@
 import React from 'react'
-import {BrowserRouter as Router, Route,  Link } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Route,
+} from 'react-router-dom'
+import { Provider } from 'react-redux';
+import Store from './store';
 
-//Scenes
+// Scenes
+import App from '../App';
 import Login from '../scenes/Login'
-import App from '../App'
 
 const routes = (
+  <Provider store={Store}>
     <Router>
-        <div>
-            <Route exact path="/" component={App} />        
-            <Route path="/login" component={Login} />        
-        </div> 
+      <div>
+        <Route path="/" component={App} exact/>
+        <Route path="/login" component={Login} exact/>
+      </div>
     </Router>
+  </Provider>
 )
-export default routes;
 
+export default routes

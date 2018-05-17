@@ -1,14 +1,10 @@
-import {
-    CURRENT_USER_SET,
-    CURRENT_USER_REMOVE,
-    CURRENT_USER_UPDATE
-} from './actionTypes';
+import * as actionTypes  from './actionTypes';
 
 //ACtionCreators devuelven actions
 //Actions = Objeto JS que contienne type y payload
 export function set(user){
     return {
-        type: CURRENT_USER_SET,
+        type: actionTypes.CURRENT_USER_SET,
         payload:{
             ...user
         }
@@ -16,13 +12,13 @@ export function set(user){
 }
 export function remove(){
     return {
-        type: CURRENT_USER_REMOVE
+        type: actionTypes.CURRENT_USER_REMOVE
     }
 
 }
 export function update(user){
     return {
-        type: CURRENT_USER_UPDATE,
+        type: actionTypes.CURRENT_USER_UPDATE,
         payload:{
             ...user
         }

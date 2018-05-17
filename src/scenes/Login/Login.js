@@ -1,6 +1,9 @@
 import React,{Component} from 'react'
 import './Login.css';
 import Logo from '../../assets/images/logo.png';
+import { connect } from 'react-redux'
+import * as currentUserActions from '../../actions/currentUser'
+
 
 class Login extends Component {
     state = {}
@@ -12,73 +15,115 @@ class Login extends Component {
             errorMessage: null
         }
         this._onSubmit= this._onSubmit.bind(this)
-        this.handlerChangeElement= this.handlerChangeElement.bind(this)
-        this.renderError= this.renderError.bind(this)
+        this._onChangeInput= this._onChangeInput.bind(this)
     }
     
-    _onSubmit(event){
-        event.preventDefault();
-        const {email,password} = this.state;
-        fetch('http://private-828b1-raaf.apiary-mock.com/users/sign_in',{method:'post', data: {email,password}})
-        .then((response) => { 
-            if(response.status === 401)    {
-                throw ("Authentication Errror")
-            }else{
-                this.setState({
-                    errorMessage: null
-                })
-                return response.json()
-            }
-         })
-        .then((json)=>{
-            alert("Sign in succesfully")
-            console.log('response',json)
-        }).catch((error)=>{
-            this._handleError(error);
-            this.setState({
-                errorMessage: error
+    
+    _onSubmit(event) {
+        event.preventDefault()
+        fetch(
+        'http://api.raaf.hansgamarra.com/users/sign_in',
+        {
+            method: 'post',
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+            email: this.state.email,
+            password: this.state.password,
             })
+        }
+        ).then((response) => {
+        console.log(response)
+        if (response.status === 401) {
+            throw new Error('Authentication Error')
+        } else {
+            return response.json()
+        }
+        }).then((json) => {
+            console.log('Response:', json)
+            alert('Sign in successful!')
+            this.setState({
+                errorMessage: null
+            })
+            this.props.setCurrentUser(json.data.attributes);
+        }).catch((error) => {
+        this.setState({
+            errorMessage: error.message
+        })
         })
     }
-    _handleError(error){
-        console.log(error)
-    }
-    render() { 
-        
-        return ( 
-            <div>
-                
-            <form onSubmit={this._onSubmit} method="post" >
-            <div className="logo">
-                <img src={Logo} alt="ALt"/>
-                </div> 
-                <input type="email" name="email" placeholder="Email" onChange={this.handlerChangeElement} value={this.state.email} required/>
-                <input type="password" name="password" placeholder="Password" value={this.state.password} onChange={this.handlerChangeElement} required/>
-                {this.renderSubmitBtn()}
-                {this.renderError()}
-            </form>
-            </div>
-         )
-    }
 
-    renderSubmitBtn = () =>{
+    
+
+    _onChangeInput(event) {
+        this.setState({
+          [event.target.name]: event.target.value
+        })
+      }
+    
+    render() {
         return (
-            <button type="submit" className="btnLogin">
-                    Login
-            </button>
+            <form onSubmit={this._onSubmit}>
+            <input
+                type="text"
+                name="email"
+                placeholder="Email"
+                required
+                value={this.state.email}
+                onChange={this._onChangeInput}/>
+            <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                required
+                value={this.state.password}
+                onChange={this._onChangeInput}/>
+            {this.renderSubmitBtn()}
+            {this.renderError()}
+            <br/>
+            {JSON.stringify(this.props.currentUser)}
+
+            </form>
         )
     }
 
-    renderError(){
-        if(this.state.errorMessage){
-            return <div style={{backgroundColor:'red', color: "#FAC"}} >{this.state.errorMessage}</div>
-        }
+    renderSubmitBtn() {
+    const buttonStyle = { backgroundColor: 'blue', color: 'white' }
+
+    return (
+        <button type="submit" className="btnLogin">
+        Login
+        </button>
+    )
     }
-    handlerChangeElement(event){
-        this.setState({
-            [event.target.name]: event.target.value
-        })
+
+    renderError() {
+        if (this.state.errorMessage) {
+            // There is an error
+            return (
+            <div style={{ backgroundColor: 'red', color: '#FAA' }}>
+                {this.state.errorMessage}
+            </div>
+            )
+        }
     }
 }
  
-export default Login;
+const mapStateToProps = (state) => {
+    return {
+        currentUser: state.currentUser
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setCurrentUser: (userAttributes) => {
+            dispatch(
+                currentUserActions.set(userAttributes)
+            )
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
